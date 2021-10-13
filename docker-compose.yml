@@ -15,8 +15,7 @@ services:
     build: ./twewwo_api
     environment:
       MIX_ENV: dev
-    env_file:
-      - .env
+      DATABASE_URL: postgres://postgres:postgres@db:5432/twewwo_api_?
     ports:
       - '4001:4000'
     volumes:
@@ -26,5 +25,19 @@ services:
     command: iex -S mix do ecto.migrate, phx.server
     depends_on:
       - db
+  frontend:
+    build: ./twewwo_client
+    environment:
+      MIX_ENV: dev
+      DATABASE_URL: postgres://postgres:postgres@db:5432/twewwo_client_?
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./twewwo_client:/app
+    stdin_open: true
+    tty: true
+    command: iex -S mix do ecto.migrate, phx.server
+    depends_on:
+      - backend
 volumes:
   pgdata:
