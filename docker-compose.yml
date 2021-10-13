@@ -4,13 +4,27 @@ services:
     environment:
       PGDATA: /var/lib/postgresql/pgdata
       POSTGRES_PASSWORD: postgres
-      POSTGRES_USERR: postgres
+      POSTGRES_USER: postgres
       POSTGRES_HOST_AUTH_METHOD: trust
     image: 'postgres:11-alpine'
-    restart: always
     ports:
       - '5432:5432'
     volumes:
       - 'pgdata:/var/lib/postgresql/data'
+  backend:
+    build: ./twewwo_api
+    environment:
+      MIX_ENV: dev
+    env_file:
+      - .env
+    ports:
+      - '4001:4000'
+    volumes:
+      - ./twewwo_api:/app
+    stdin_open: true
+    tty: true
+    command: iex -S mix do ecto.migrate, phx.server
+    depends_on:
+      - db
 volumes:
   pgdata:
