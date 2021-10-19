@@ -6,7 +6,8 @@ config :twewwo_api, TwewwoApi.Repo,
   # password: "postgres",
   # database: "twewwo_api_dev",
   # hostname: "localhost",
-  url: System.get_env("DATABASE_URL") |> String.replace("?", "dev"),
+  # url: System.get_env("DATABASE_URL") |> String.replace("?", "dev"),
+  url: "postgres://postgres:postgres@db:5432/twewwo_api_dev",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
