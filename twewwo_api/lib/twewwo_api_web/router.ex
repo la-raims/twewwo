@@ -16,7 +16,9 @@ defmodule TwewwoApiWeb.Router do
   scope "/api", TwewwoApiWeb do
     pipe_through :api
 
-    resources "/lists", TaskListController, except: [:new, :edit]
+    resources "/lists", TaskListController, except: [:new, :edit] do
+      resources "/tasks", TaskController, except: [:new, :edit]
+    end
   end
 
   scope "/", TwewwoApiWeb do
