@@ -5,7 +5,7 @@ defmodule TwewwoApi.Todo.Task do
   schema "tasks" do
     field :description, :string
     field :title, :string
-    belongs_to :task_list, TwewwoApi.TaskList
+    belongs_to :task_lists, TwewwoApi.TaskList
 
     timestamps()
   end
