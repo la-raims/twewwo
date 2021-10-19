@@ -13,6 +13,12 @@ defmodule TwewwoApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api", TwewwoApiWeb do
+    pipe_through :api
+
+    resources "/lists", TaskListController, except: [:new, :edit]
+  end
+
   scope "/", TwewwoApiWeb do
     pipe_through :browser
 
