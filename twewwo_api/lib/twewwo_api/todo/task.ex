@@ -5,15 +5,22 @@ defmodule TwewwoApi.Todo.Task do
   schema "tasks" do
     field :description, :string
     field :title, :string
-    belongs_to :task_lists, TwewwoApi.TaskList
+    belongs_to :task_list, TwewwoApi.Todo.TaskList
 
     timestamps()
   end
 
+  @required_attrs [
+    :title,
+    :description,
+    :task_list_id
+  ]
+
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:title, :description])
-    |> validate_required([:title, :description])
+    |> cast(attrs, @required_attrs)
+    |> foreign_key_constraint(:task_list_id)
+    |> validate_required(@required_attrs)
   end
 end

@@ -5,7 +5,7 @@ defmodule TwewwoApi.Todo.TaskList do
   schema "task_lists" do
     field :name, :string
     field :order, {:array, :id}
-    has_many :tasks, TwewwoApi.Task
+    has_many :tasks, TwewwoApi.Todo.Task
 
     timestamps()
   end
