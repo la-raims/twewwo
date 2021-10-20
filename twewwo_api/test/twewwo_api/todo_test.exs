@@ -7,9 +7,9 @@ defmodule TwewwoApi.TodoTest do
 
   describe "task_lists" do
 
-    @valid_attrs %{name: "some name", order: []}
+    @valid_attrs %{name: "some name"}
     @update_attrs %{name: "some updated name", order: []}
-    @invalid_attrs %{name: nil, order: nil}
+    @invalid_attrs %{name: nil}
 
     def task_list_fixture(attrs \\ %{}) do
       {:ok, task_list} =
