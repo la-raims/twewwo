@@ -15,7 +15,10 @@ defmodule TwewwoApiWeb.TaskController do
     with {:ok, %Task{} = task} <- Todo.create_task(task_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.task_list_task_path(conn, :show, task_params["task_list_id"], task))
+      |> put_resp_header(
+        "location",
+        Routes.task_list_task_path(conn, :show, task_params["task_list_id"], task)
+      )
       |> render("show.json", task: task)
     end
   end

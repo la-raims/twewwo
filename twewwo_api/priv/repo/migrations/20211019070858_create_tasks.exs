@@ -8,6 +8,5 @@ defmodule TwewwoApi.Repo.Migrations.CreateTasks do
 
       timestamps()
     end
-
   end
 end

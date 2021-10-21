@@ -11,8 +11,6 @@ defmodule TwewwoApiWeb.TaskView do
   end
 
   def render("task.json", %{task: task}) do
-    %{id: task.id,
-      title: task.title,
-      description: task.description}
+    %{id: task.id, title: task.title, description: task.description}
   end
 end

@@ -53,7 +53,10 @@ defmodule TwewwoApiWeb.TaskListControllerTest do
   describe "update task_list" do
     setup [:create_task_list]
 
-    test "renders task_list when data is valid", %{conn: conn, task_list: %TaskList{id: id} = task_list} do
+    test "renders task_list when data is valid", %{
+      conn: conn,
+      task_list: %TaskList{id: id} = task_list
+    } do
       conn = put(conn, Routes.task_list_path(conn, :update, task_list), task_list: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

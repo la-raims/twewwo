@@ -4,6 +4,7 @@ defmodule TwewwoApi.Todo do
   """
 
   import Ecto.Query, warn: false
+  alias Ecto.Multi
   alias TwewwoApi.Repo
 
   alias TwewwoApi.Todo.TaskList
@@ -144,10 +145,41 @@ defmodule TwewwoApi.Todo do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_task(attrs \\ %{}) do
-    %Task{}
-    |> Task.changeset(attrs)
-    |> Repo.insert()
+  def build_create_task_multi(attrs \\ %{}, %TaskList{} = task_list) do
+    Multi.new()
+    |> Multi.insert(:task, Task.changeset(%Task{}, attrs))
+    |> Multi.run(:task_list, fn _repo, %{task: task} ->
+      updated_order = [task.id | Enum.reverse(task_list.order)]
+      update_task_list(task_list, %{order: Enum.reverse(updated_order)})
+    end)
+  end
+
+  def create_task(%{task_list_id: task_list_id} = attrs) do
+    task_list = get_task_list!(task_list_id)
+
+    attrs
+    |> build_create_task_multi(task_list)
+    |> Repo.transaction()
+  end
+
+  def create_task(%{"task_list_id" => task_list_id} = attrs) do
+    task_list = get_task_list!(task_list_id)
+
+    result =
+      attrs
+      |> build_create_task_multi(task_list)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{task: task, task_list: _task_list}} ->
+        {:ok, task}
+
+      {:error, _multi_name, changeset, %{}} ->
+        {:error, changeset}
+
+      _ ->
+        {:error, :not_found}
+    end
   end
 
   @doc """

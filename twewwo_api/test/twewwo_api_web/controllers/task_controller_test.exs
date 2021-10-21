@@ -24,7 +24,7 @@ defmodule TwewwoApiWeb.TaskControllerTest do
   end
 
   def fixture(attrs \\ %{}) do
-    {:ok, task} =
+    {:ok, %{task: task}} =
       attrs
       |> Enum.into(@create_attrs)
       |> Todo.create_task()
@@ -38,6 +38,7 @@ defmodule TwewwoApiWeb.TaskControllerTest do
 
   describe "index" do
     setup [:create_task_list]
+
     test "lists all tasks", %{conn: conn, task_list: task_list} do
       conn = get(conn, Routes.task_list_task_path(conn, :index, task_list.id))
       assert json_response(conn, 200)["data"] == []
@@ -46,8 +47,13 @@ defmodule TwewwoApiWeb.TaskControllerTest do
 
   describe "create task" do
     setup [:create_task_list]
+
     test "renders task when data is valid", %{conn: conn, task_list: task_list} do
-      conn = post(conn, Routes.task_list_task_path(conn, :create, task_list.id), task: Map.put(@create_attrs, :task_list_id, task_list.id))
+      conn =
+        post(conn, Routes.task_list_task_path(conn, :create, task_list.id),
+          task: Map.put(@create_attrs, :task_list_id, task_list.id)
+        )
+
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, Routes.task_list_task_path(conn, :show, task_list.id, id))
@@ -60,7 +66,11 @@ defmodule TwewwoApiWeb.TaskControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, task_list: task_list} do
-      conn = post(conn, Routes.task_list_task_path(conn, :create, task_list.id), task: @invalid_attrs)
+      conn =
+        post(conn, Routes.task_list_task_path(conn, :create, task_list.id),
+          task: Map.put(@invalid_attrs, :task_list_id, task_list.id)
+        )
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -68,8 +78,15 @@ defmodule TwewwoApiWeb.TaskControllerTest do
   describe "update task" do
     setup [:create_task]
 
-    test "renders task when data is valid", %{conn: conn, task: %Task{id: id, task_list_id: task_list_id} = task} do
-      conn = put(conn, Routes.task_list_task_path(conn, :update, task_list_id, task), task: @update_attrs)
+    test "renders task when data is valid", %{
+      conn: conn,
+      task: %Task{id: id, task_list_id: task_list_id} = task
+    } do
+      conn =
+        put(conn, Routes.task_list_task_path(conn, :update, task_list_id, task),
+          task: @update_attrs
+        )
+
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, Routes.task_list_task_path(conn, :show, task_list_id, id))
@@ -81,8 +98,15 @@ defmodule TwewwoApiWeb.TaskControllerTest do
              } = json_response(conn, 200)["data"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn, task: %Task{task_list_id: task_list_id} = task} do
-      conn = put(conn, Routes.task_list_task_path(conn, :update, task_list_id, task), task: @invalid_attrs)
+    test "renders errors when data is invalid", %{
+      conn: conn,
+      task: %Task{task_list_id: task_list_id} = task
+    } do
+      conn =
+        put(conn, Routes.task_list_task_path(conn, :update, task_list_id, task),
+          task: @invalid_attrs
+        )
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
