@@ -24,7 +24,7 @@ defmodule TwewwoApiWeb.TaskControllerTest do
   end
 
   def fixture(attrs \\ %{}) do
-    {:ok, %{task: task}} =
+    {:ok, %Task{} = task} =
       attrs
       |> Enum.into(@create_attrs)
       |> Todo.create_task()

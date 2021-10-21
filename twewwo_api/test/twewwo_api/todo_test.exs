@@ -76,7 +76,7 @@ defmodule TwewwoApi.TodoTest do
     @invalid_attrs %{description: nil, title: nil}
 
     def task_fixture(attrs \\ %{}) do
-      {:ok, %{task: task}} =
+      {:ok, %Task{} = task} =
         attrs
         |> Enum.into(@valid_attrs)
         |> Todo.create_task()
@@ -95,7 +95,7 @@ defmodule TwewwoApi.TodoTest do
     end
 
     test "create_task/1 with valid data creates a task", %{task_list: %{id: task_list_id}} do
-      assert {:ok, %{task: %Task{} = task}} =
+      assert {:ok, %Task{} = task} =
                @valid_attrs
                |> Map.put(:task_list_id, task_list_id)
                |> Todo.create_task()
@@ -109,7 +109,7 @@ defmodule TwewwoApi.TodoTest do
     test "create_task/1 with invalid data returns error changeset", %{
       task_list: %{id: task_list_id}
     } do
-      assert {:error, task, %Ecto.Changeset{}, %{}} =
+      assert {:error, %Ecto.Changeset{}} =
                @invalid_attrs
                |> Map.put(:task_list_id, task_list_id)
                |> Todo.create_task()

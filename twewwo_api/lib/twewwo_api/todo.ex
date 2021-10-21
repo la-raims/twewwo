@@ -155,16 +155,18 @@ defmodule TwewwoApi.Todo do
   end
 
   def create_task(%{task_list_id: task_list_id} = attrs) do
-    task_list = get_task_list!(task_list_id)
-
-    attrs
-    |> build_create_task_multi(task_list)
-    |> Repo.transaction()
+    task_list_id
+    |> get_task_list!()
+    |> do_create_task(attrs)
   end
 
   def create_task(%{"task_list_id" => task_list_id} = attrs) do
-    task_list = get_task_list!(task_list_id)
+    task_list_id
+    |> get_task_list!()
+    |> do_create_task(attrs)
+  end
 
+  defp do_create_task(%TaskList{} = task_list, attrs) do
     result =
       attrs
       |> build_create_task_multi(task_list)
